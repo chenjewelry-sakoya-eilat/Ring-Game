@@ -1,5 +1,11 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ecb9b6">
+<meta name="description" content="משחק קליעת טבעות של סקויה · סניף אילת">
 <title>קליעת טבעות</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@400;600&display=swap">
 <style>
 /* Layout: fixed full-viewport stage in the brand's taupe-and-satin world — slim HUD of ring thumbnails, photo hand on satin, caption. Single warm look by design. */
@@ -17,8 +23,10 @@
   color-scheme:light;
 }
 [hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+img{max-width:100%}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
-body{background:var(--bg);color:var(--ink);font-family:var(--font-body);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-size:14px;-webkit-text-size-adjust:100%;touch-action:manipulation;background:var(--bg);color:var(--ink);font-family:var(--font-body);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;direction:rtl;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
@@ -105,8 +113,13 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 .result.ok{background:#e9f3e6;border-color:#7da86f}
 .result.bad{background:#f8e6e2;border-color:#c98b7d}
 .result .amount{font-size:40px}
+.rotate{display:none}
+@media (orientation:landscape) and (max-height:500px){.rotate{display:grid;place-items:center;position:fixed;inset:0;z-index:20;background:var(--blush);color:var(--berry);font:500 20px var(--font-display);text-align:center;padding:24px;direction:rtl}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
+</head>
+<body>
+
 
 <div class="app">
   <div class="hud">
@@ -120,6 +133,7 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
   </div>
 </div>
 
+<div class="rotate" id="rotate"><div>סובבו את הטלפון לאורך כדי לשחק</div></div>
 <div class="page" id="landing">
   <div class="wrap">
     <div class="wordmark" id="wordmark" hidden></div>
@@ -212,6 +226,7 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
   <div class="wrap">
     <h1>בדיקת קופון</h1>
     <p class="fine" style="color:var(--muted)">לשימוש צוות הדוכן בלבד</p>
+    <p class="fine" id="conn"></p>
     <label for="pinIn">קוד צוות (PIN)<input id="pinIn" inputmode="numeric" autocomplete="off" type="password"></label>
     <label for="codeIn">קוד הקופון<input id="codeIn" autocomplete="off" autocapitalize="characters" placeholder="EIL-XXXXXX"></label>
     <div class="row">
@@ -227,9 +242,8 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 /* Campaign settings. Fill supabaseUrl + supabaseKey (anon key) to issue real, trackable coupons. */
 const CFG={
   brand:'SAKOIA',
-  supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
-  supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
-
+ supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
+ supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
   expires:new Date('2026-11-30T23:59:59+02:00'),
   prizes:[0,5,10,20,30,40]
 };
@@ -538,15 +552,16 @@ const ALPH='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 function localCode(){let c='DEMO-';for(let i=0;i<6;i++)c+=ALPH[Math.floor(Math.random()*ALPH.length)];return c;}
 async function rpc(fn,body){
   const r=await fetch(CFG.supabaseUrl.replace(/\/$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',
-    headers:{apikey:CFG.supabaseKey,Authorization:'Bearer '+CFG.supabaseKey,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    headers:Object.assign({apikey:CFG.supabaseKey,'Content-Type':'application/json'},/^eyJ/.test(CFG.supabaseKey)?{Authorization:'Bearer '+CFG.supabaseKey}:{}),body:JSON.stringify(body)});
   const txt=await r.text();let data=null;try{data=JSON.parse(txt);}catch(_){}
-  if(!r.ok)throw new Error((data&&data.message)||txt||('HTTP '+r.status));
+  if(!r.ok)throw new Error('HTTP '+r.status+' · '+((data&&(data.message||data.hint))||txt||'').slice(0,140));
   return data;
 }
 async function issueCoupon(rings){
   if(!LIVE)return {code:localCode(),amount:CFG.prizes[rings],demo:true};
   const rows=await rpc('issue_coupon',{p_rings:rings});
   const row=Array.isArray(rows)?rows[0]:rows;
+  if(!row||!row.code)throw new Error('השרת לא החזיר קוד');
   return {code:row.code,amount:row.amount,demo:false};
 }
 function saveMine(c){try{const a=JSON.parse(localStorage.getItem('sakoia-coupons')||'[]');a.unshift({code:c.code,amount:c.amount,demo:c.demo});localStorage.setItem('sakoia-coupons',JSON.stringify(a.slice(0,10)));}catch(_){}}
@@ -570,7 +585,7 @@ async function showEnd(){
     saveMine(cp);
   }catch(e){
     $('cpCode').textContent='—';
-    $('cpNote').textContent='לא הצלחנו להנפיק קוד. בדקו את החיבור לאינטרנט ולחצו "לשחק שוב".';
+    $('cpNote').textContent='לא הצלחנו להנפיק קוד. בדקו את החיבור לאינטרנט ונסו שוב. ('+e.message+')';
   }
 }
 
@@ -606,13 +621,15 @@ $('heroImg').src=ASSETS.hand.src;
 
 /* ---------- staff check ---------- */
 let checked=null;
+$('conn').textContent=LIVE?'מחובר לשרת הקופונים':'מצב הדגמה: השרת לא מחובר עדיין, אז אין מה לבדוק. ממלאים supabaseUrl ו-supabaseKey בראש הקובץ.';
+$('conn').style.color=LIVE?'#3f7a3a':'#b0443c';
 function result(cls,html){const r=$('result');r.hidden=false;r.className='result '+cls;r.innerHTML=html;}
 function fmt(d){return new Date(d).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const ERR={pin:'קוד הצוות שגוי',not_found:'הקופון לא נמצא. בדקו שהקוד הוקלד נכון.',already:'הקופון כבר מומש',expired:'תוקף הקופון פג'};
 $('checkBtn').addEventListener('click',async()=>{
   $('redeemBtn').disabled=true;checked=null;
-  if(!LIVE){result('bad','בדיקת קופונים תעבוד אחרי חיבור השרת (Supabase).');return;}
+  if(!LIVE){result('bad','מצב הדגמה: קודי DEMO לא נשמרים בשרת ולכן לא ניתנים לבדיקה. בדיקה תעבוד אחרי חיבור Supabase.');return;}
   const code=$('codeIn').value.trim().toUpperCase(), pin=$('pinIn').value.trim();
   if(!code||!pin){result('bad','הזינו קוד צוות וקוד קופון.');return;}
   result('','בודקים…');
@@ -622,7 +639,7 @@ $('checkBtn').addEventListener('click',async()=>{
     if(d.redeemed_at){result('bad','<div class="amount">₪'+d.amount+'</div>הקופון כבר מומש ב-'+esc(fmt(d.redeemed_at)));return;}
     if(d.expired){result('bad','<div class="amount">₪'+d.amount+'</div>תוקף הקופון פג');return;}
     checked=code;$('redeemBtn').disabled=false;
-    result('ok','<div class="amount">₪'+d.amount+'</div>קופון תקף · '+d.rings+' טבעות · הונפק '+esc(fmt(d.created_at))+'<br>בקנייה מעל ₪200, ללא כפל מבצעים');
+    result('ok','<div class="amount">₪'+d.amount+'</div>קופון תקף · '+(d.rings==1?'טבעת אחת':d.rings+' טבעות')+' · הונפק '+esc(fmt(d.created_at))+'<br>בקנייה מעל ₪200, ללא כפל מבצעים');
   }catch(e){result('bad','שגיאת תקשורת: '+esc(e.message));}
 });
 $('redeemBtn').addEventListener('click',async()=>{
@@ -646,3 +663,6 @@ resize();buildThumbs();updateCaption();route();
 requestAnimationFrame(frame);
 })();
 </script>
+
+</body>
+</html>

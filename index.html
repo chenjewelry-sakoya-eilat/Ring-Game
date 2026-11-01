@@ -242,8 +242,8 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 /* Campaign settings. Fill supabaseUrl + supabaseKey (anon key) to issue real, trackable coupons. */
 const CFG={
   brand:'SAKOIA',
- supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
- supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
+supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
+supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
   expires:new Date('2026-11-30T23:59:59+02:00'),
   prizes:[0,5,10,20,30,40]
 };
@@ -550,8 +550,17 @@ cv.addEventListener('pointercancel',()=>{drag=null;});
 /* ---------- coupons ---------- */
 const ALPH='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 function localCode(){let c='DEMO-';for(let i=0;i<6;i++)c+=ALPH[Math.floor(Math.random()*ALPH.length)];return c;}
+/* accept whatever was pasted: project URL, API URL with /rest/v1, dashboard link or bare project ref */
+function sbBase(u){
+  u=(u||'').trim();
+  const m=u.match(/project\/([a-z0-9]{20})/i);if(m)return 'https://'+m[1].toLowerCase()+'.supabase.co';
+  if(/^[a-z0-9]{20}$/i.test(u))return 'https://'+u.toLowerCase()+'.supabase.co';
+  if(!/^https?:\/\//i.test(u))u='https://'+u;
+  try{return new URL(u).origin;}catch(_){return u.replace(/\/+$/,'');}
+}
+function normCode(c){c=String(c).toUpperCase().replace(/[^A-Z0-9]/g,'');if(c.startsWith('EIL'))c=c.slice(3);return c?'EIL-'+c:'';}
 async function rpc(fn,body){
-  const r=await fetch(CFG.supabaseUrl.replace(/\/$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',
+  const r=await fetch(sbBase(CFG.supabaseUrl)+'/rest/v1/rpc/'+fn,{method:'POST',
     headers:Object.assign({apikey:CFG.supabaseKey,'Content-Type':'application/json'},/^eyJ/.test(CFG.supabaseKey)?{Authorization:'Bearer '+CFG.supabaseKey}:{}),body:JSON.stringify(body)});
   const txt=await r.text();let data=null;try{data=JSON.parse(txt);}catch(_){}
   if(!r.ok)throw new Error('HTTP '+r.status+' · '+((data&&(data.message||data.hint))||txt||'').slice(0,140));
@@ -630,7 +639,7 @@ const ERR={pin:'קוד הצוות שגוי',not_found:'הקופון לא נמצ�
 $('checkBtn').addEventListener('click',async()=>{
   $('redeemBtn').disabled=true;checked=null;
   if(!LIVE){result('bad','מצב הדגמה: קודי DEMO לא נשמרים בשרת ולכן לא ניתנים לבדיקה. בדיקה תעבוד אחרי חיבור Supabase.');return;}
-  const code=$('codeIn').value.trim().toUpperCase(), pin=$('pinIn').value.trim();
+  const code=normCode($('codeIn').value), pin=$('pinIn').value.trim();
   if(!code||!pin){result('bad','הזינו קוד צוות וקוד קופון.');return;}
   result('','בודקים…');
   try{

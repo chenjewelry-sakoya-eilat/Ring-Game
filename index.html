@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#ecb9b6">
 <meta name="description" content="משחק קליעת טבעות של סקויה · סניף אילת">
 <title>קליעת טבעות</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&family=Frank+Ruhl+Libre:wght@400&display=swap">
 <style>
 /* Layout: fixed full-viewport stage in the brand's taupe-and-satin world — slim HUD of ring thumbnails, photo hand on satin, caption. Single warm look by design. */
 :root{
@@ -18,8 +18,9 @@
   --berry:#6b3f44;
   --muted:#8a5a5e;
   --line:rgba(107,63,68,.22);
-  --font-display:"Frank Ruhl Libre", "David", Georgia, serif;
-  --font-body:"Assistant", "Arial Hebrew", Arial, sans-serif;
+  --font-display:"Heebo", "Arial Hebrew", Arial, sans-serif;
+  --font-body:"Heebo", "Arial Hebrew", Arial, sans-serif;
+  --font-mark:"Frank Ruhl Libre", Georgia, serif;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -33,8 +34,8 @@ body{margin:0;font-size:14px;-webkit-text-size-adjust:100%;touch-action:manipula
   background:linear-gradient(180deg,var(--blush),var(--bg) 60%,#e2a9a6)}
 .hud{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px 8px;border-bottom:1px solid var(--line)}
 .score{display:flex;align-items:baseline;gap:8px;line-height:1}
-.score small{font-size:11px;letter-spacing:.22em;color:var(--muted)}
-.score b{font-family:var(--font-display);font-weight:400;font-size:clamp(22px,7vw,28px);color:var(--berry);font-variant-numeric:tabular-nums}
+.score small{font-size:11px;letter-spacing:.04em;color:var(--muted)}
+.score b{font-family:var(--font-display);font-weight:500;font-size:clamp(22px,7vw,28px);color:var(--berry);font-variant-numeric:tabular-nums}
 .thumbs{display:flex;gap:4px;direction:ltr}
 .thumbs img{width:26px;height:26px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,.45);padding:2px;transition:opacity .3s, transform .3s}
 .thumbs img.used{opacity:.25;transform:scale(.85)}
@@ -51,18 +52,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .card{margin:auto;width:100%;max-width:340px;background:rgba(251,239,236,.97);color:var(--ink);
   outline:1px solid rgba(201,143,139,.45);outline-offset:-8px;
   border-radius:2px;padding:clamp(22px,6vw,30px) clamp(18px,5vw,26px);display:flex;flex-direction:column;gap:clamp(10px,3vw,14px);text-align:center;box-shadow:0 30px 70px rgba(107,63,68,.3)}
-.eyebrow{font-size:11px;letter-spacing:.32em;color:var(--rose)}
-h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42px);line-height:1.05;margin:0;text-wrap:balance}
+.eyebrow{font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--rose)}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38px);line-height:1.1;margin:0;text-wrap:balance}
 .rule{height:1px;background:var(--rose);width:56px;margin-inline:auto;opacity:.6}
 .lead{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
 .rules{list-style:none;margin:0;padding:0;display:grid;gap:8px;text-align:right;font-size:14px;line-height:1.45;color:var(--ink)}
 .rules li{display:flex;gap:10px;align-items:baseline}
 .rules li span{color:var(--rose);font-size:8px;transform:translateY(-2px)}
-.btn{appearance:none;border:0;border-radius:1px;padding:14px 18px;font:600 15px var(--font-body);letter-spacing:.14em;
+.btn{appearance:none;border:0;border-radius:1px;padding:14px 18px;font:500 16px var(--font-body);letter-spacing:.02em;
   background:var(--berry);color:#fff8f6;cursor:pointer}
 .btn:focus-visible{outline:2px solid var(--berry);outline-offset:3px}
 .btn.ghost{background:transparent;color:var(--berry);border:1px solid rgba(107,63,68,.4)}
-.big{font-family:var(--font-display);font-weight:400;font-size:clamp(46px,15vw,60px);line-height:1;font-variant-numeric:tabular-nums}
+.big{font-family:var(--font-display);font-weight:300;font-size:clamp(46px,15vw,60px);line-height:1;font-variant-numeric:tabular-nums}
 .caught{display:flex;justify-content:center;gap:6px;direction:ltr}
 .caught img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:50%;padding:4px;box-shadow:0 2px 8px rgba(107,63,68,.15)}
 .caught img.miss{opacity:.25;filter:grayscale(1)}
@@ -76,11 +77,13 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 .page{position:fixed;inset:0;z-index:6;overflow-y:auto;direction:rtl;background:linear-gradient(180deg,var(--shell) 0%,var(--blush) 40%,var(--bg) 100%);color:var(--ink);
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-block:calc(env(safe-area-inset-top,0px) + 20px) calc(env(safe-area-inset-bottom,0px) + 28px)}
-.wrap{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-.wordmark{text-align:center;font-family:var(--font-display);font-weight:400;letter-spacing:.42em;font-size:clamp(28px,9vw,38px);line-height:1;direction:ltr;padding-inline-start:.42em}
+.wrap{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(10px,2.2dvh,18px)}
+.ctabar{position:sticky;bottom:0;display:grid;gap:6px;padding-top:10px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);background:linear-gradient(180deg,rgba(236,185,182,0),var(--bg) 30%);z-index:2}
+#landing{padding-bottom:0}
+.wordmark{text-align:center;font-family:var(--font-mark);font-weight:400;letter-spacing:.42em;font-size:clamp(28px,9vw,38px);line-height:1;direction:ltr;padding-inline-start:.42em}
 .wordmark small{display:block;font-size:11px;letter-spacing:.6em;margin-top:8px;color:var(--muted)}
-.where{text-align:center;font-size:12px;letter-spacing:.24em;color:var(--muted)}
-.hero{position:relative;height:clamp(210px,36vh,320px);display:flex;justify-content:center;align-items:flex-start;overflow:hidden;
+.where{text-align:center;font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.hero{position:relative;height:clamp(120px,26dvh,300px);display:flex;justify-content:center;align-items:flex-start;overflow:hidden;
   border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent);mask-image:linear-gradient(180deg,#000 75%,transparent)}
 .hero img{width:auto;height:178%;max-width:none;filter:drop-shadow(0 18px 30px rgba(107,63,68,.28))}
 .page h1{color:var(--berry);text-align:center}
@@ -99,11 +102,11 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 .terms{background:var(--shell);color:var(--ink)}
 .terms .wrap{gap:12px}
 .terms h1{color:var(--berry);font-size:clamp(26px,8vw,32px)}
-.terms h2{font-family:var(--font-display);font-weight:500;font-size:17px;margin:10px 0 0}
+.terms h2{font-family:var(--font-display);font-weight:700;font-size:17px;margin:10px 0 0}
 .terms ol{margin:0;padding-inline-start:20px;display:grid;gap:8px;font-size:14px;line-height:1.6}
 .terms p{margin:0;font-size:14px;line-height:1.6}
 .terms .btn{background:var(--berry);color:#fff8f6}
-.amount{font-family:var(--font-display);font-weight:500;font-size:clamp(52px,17vw,68px);line-height:1;direction:rtl}
+.amount{font-family:var(--font-display);font-weight:300;font-size:clamp(52px,17vw,68px);line-height:1;direction:rtl}
 .conds{list-style:none;margin:0;padding:0;display:grid;gap:5px;text-align:right;font-size:13px;line-height:1.45;color:var(--ink)}
 .conds li::before{content:"◆";font-size:7px;color:var(--rose);margin-inline-end:8px;vertical-align:2px}
 .valid{font-weight:600;font-size:14px}
@@ -115,6 +118,14 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 .result .amount{font-size:40px}
 .rotate{display:none}
 @media (orientation:landscape) and (max-height:500px){.rotate{display:grid;place-items:center;position:fixed;inset:0;z-index:20;background:var(--blush);color:var(--berry);font:500 20px var(--font-display);text-align:center;padding:24px;direction:rtl}}
+.hudr{display:flex;align-items:center;gap:8px}
+.snd{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.5);color:var(--berry);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0}
+.snd .x{display:none}.snd[aria-pressed="true"] .x{display:block}.snd[aria-pressed="true"]{opacity:.6}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
+.copyrow{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.mini{appearance:none;border:1px solid var(--berry);background:#fff;color:var(--berry);font:500 14px var(--font-body);padding:9px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.mini.wa{background:#25d366;border-color:#1fb457;color:#fff}
+.mini:disabled{opacity:.5}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -124,7 +135,10 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
 <div class="app">
   <div class="hud">
     <div class="score"><small>הקופון שלך</small><b id="score">₪0</b></div>
-    <div class="thumbs" id="thumbs" aria-label="הטבעות במשחק"></div>
+    <div class="hudr">
+      <div class="thumbs" id="thumbs" aria-label="הטבעות במשחק"></div>
+      <button class="snd" id="sndBtn" aria-label="השתקת מוזיקה" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/><path class="x" d="M3 3l18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
   </div>
   <div class="stage" id="stage"><canvas id="cv"></canvas></div>
   <div class="caption">
@@ -133,6 +147,7 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
   </div>
 </div>
 
+<canvas id="fx" aria-hidden="true"></canvas>
 <div class="rotate" id="rotate"><div>סובבו את הטלפון לאורך כדי לשחק</div></div>
 <div class="page" id="landing">
   <div class="wrap">
@@ -149,10 +164,11 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
       <div><b>₪40</b><span>5 טבעות</span></div>
     </div>
     <div class="mine" id="mine" hidden></div>
-    <div class="closed" id="closed" hidden>המבצע הסתיים. תודה שהשתתפתם!</div>
-    <button class="btn" id="startBtn">לשחק עכשיו</button>
-    <p class="fine">למימוש בקנייה מעל ₪200 בדוכן סקויה בסניף אילת · בתוקף עד 30.11.2026 · קופון אחד לקנייה · ללא כפל מבצעים</p>
-    <p class="fine"><button class="link" id="termsLink">לתקנון המלא</button></p>
+    <p class="fine">למימוש בקנייה מעל ₪200 בדוכן סקויה בסניף אילת · בתוקף עד 30.11.2026 · קופון אחד לקנייה · ללא כפל מבצעים · <button class="link" id="termsLink">לתקנון המלא</button></p>
+    <div class="ctabar">
+      <div class="closed" id="closed" hidden>המבצע הסתיים. תודה שהשתתפתם!</div>
+      <button class="btn" id="startBtn">לשחק עכשיו</button>
+    </div>
   </div>
 </div>
 
@@ -207,6 +223,10 @@ h1{font-family:var(--font-display);font-weight:400;font-size:clamp(32px,10vw,42p
       <code id="cpCode"></code>
       <div class="valid">בתוקף עד 30.11.2026 · סניף אילת בלבד</div>
       <small id="cpNote">הציגו את המסך הזה בדוכן</small>
+    </div>
+    <div class="copyrow" id="cpActions" hidden>
+      <button class="mini" id="copyBtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>העתקת הקוד</span></button>
+      <button class="mini wa" id="shareBtn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg><span>שיתוף בוואטסאפ</span></button>
     </div>
     <ul class="conds" id="conds">
       <li>ללא כפל מבצעים והנחות</li>
@@ -462,7 +482,7 @@ function render(){
   floats.forEach(f=>{
     if(f.t<0)return;
     ctx.save();ctx.globalAlpha=Math.max(0,1-f.t/1.2);ctx.direction='rtl';ctx.textAlign='center';
-    ctx.font=`500 ${Math.round(22*s)}px "Frank Ruhl Libre", Georgia, serif`;
+    ctx.font=`700 ${Math.round(21*s)}px "Heebo", Arial, sans-serif`;
     ctx.shadowColor='rgba(255,255,255,.9)';ctx.shadowBlur=10;
     ctx.fillStyle=f.color;ctx.fillText(f.text,f.x,f.y);ctx.restore();
   });
@@ -511,6 +531,7 @@ function atTip(){
   if(Math.abs(dx)<tol){
     hits++;results[f.type]=true;
     $('score').textContent='₪'+CFG.prizes[hits];$('th'+f.type).classList.add('used','hit');
+    SFX.thread(hits);
     floats.push({text:'הושחלה! ₪'+CFG.prizes[hits],x:clamp(fingerX(G.tipY),70*s,W-70*s),y:G.tipY+40*s,t:0,color:'#6b3f44'});
     slide={type:f.type,x0:f.ax,t:0};
   } else {
@@ -519,6 +540,7 @@ function atTip(){
   }
 }
 function missRing(type,text,o){
+  SFX.miss();
   streak=0;results[type]=false;$('th'+type).classList.add('used');
   floats.push({text,x:clamp(o.x,60*s,W-60*s),y:o.y-14*s,t:0,color:'#8a5a5e'});
   fall={type,x:o.x,y:o.y,vx:o.vx,vy:o.vy,a:1,rot:0,vr:5,band:o.band,size:G.onRx*2.6};
@@ -584,12 +606,13 @@ async function showEnd(){
   $('endLine').textContent=hits?('השחלתם '+hits+' מתוך 5 טבעות'):'אף טבעת לא השתחלה הפעם. נסו שוב!';
   $('coupon').hidden=!hits;$('conds').hidden=!hits;
   $('endEyebrow').textContent=hits?'זכיתם בקופון':'כמעט';
-  $('endOv').hidden=false;
-  if(!hits)return;
+  $('endOv').hidden=false;$('cpActions').hidden=true;
+  if(!hits){SFX.lose();return;}
+  SFX.win(hits);confetti(hits);
   $('cpAmount').textContent='₪'+won;$('cpCode').textContent='מנפיקים קוד…';$('cpNote').textContent='הציגו את המסך הזה בדוכן';
   try{
     const cp=await issueCoupon(hits);
-    $('cpCode').textContent=cp.code;
+    $('cpCode').textContent=cp.code;lastCoupon=cp;$('cpActions').hidden=false;$('copyBtn').lastChild.textContent='העתקת הקוד';
     if(cp.demo)$('cpNote').textContent='קוד הדגמה. הקופונים האמיתיים יונפקו אחרי חיבור השרת.';
     saveMine(cp);
   }catch(e){
@@ -597,6 +620,151 @@ async function showEnd(){
     $('cpNote').textContent='לא הצלחנו להנפיק קוד. בדקו את החיבור לאינטרנט ונסו שוב. ('+e.message+')';
   }
 }
+
+/* ---------- sound: synthesized in the browser, no audio files ---------- */
+const SFX=(function(){
+  let ac=null,master,music,sfx,delay,timer=null,nextT=0,step=0;
+  let muted=false;try{muted=localStorage.getItem('sakoia-muted')==='1';}catch(_){}
+  const N=m=>440*Math.pow(2,(m-69)/12);
+  // F major, gentle I–vi–IV–V. Each chord: [bass, arpeggio notes]
+  const PROG=[[41,[65,69,72,77,72,69,72,76]],[38,[62,65,69,74,69,65,69,72]],[46,[62,65,70,74,70,65,70,72]],[48,[64,67,72,76,72,67,72,74]]];
+  const BEAT=60/84/2; // eighth notes at 84 bpm
+  function init(){
+    if(ac)return true;
+    const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
+    ac=new C();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination);
+    music=ac.createGain();music.gain.value=.16;sfx=ac.createGain();sfx.gain.value=.5;
+    delay=ac.createDelay();delay.delayTime.value=BEAT*3;const fb=ac.createGain();fb.gain.value=.28;const wet=ac.createGain();wet.gain.value=.35;
+    const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;
+    delay.connect(fb);fb.connect(lp);lp.connect(delay);delay.connect(wet);wet.connect(master);
+    music.connect(master);music.connect(delay);sfx.connect(master);sfx.connect(delay);
+    document.addEventListener('visibilitychange',()=>{if(!ac)return;document.hidden?ac.suspend():ac.resume();});
+    return true;
+  }
+  function bell(t,f,vol,dur,dest){ // music-box tone: sine + soft overtone
+    [[1,1],[2.01,.28],[3.98,.08]].forEach(([m,g])=>{
+      const o=ac.createOscillator(),e=ac.createGain();o.type='sine';o.frequency.value=f*m;
+      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(vol*g,t+.006);e.gain.exponentialRampToValueAtTime(.0001,t+dur/m);
+      o.connect(e);e.connect(dest);o.start(t);o.stop(t+dur+.05);
+    });
+  }
+  function pad(t,f,dur){
+    [-6,6].forEach(d=>{const o=ac.createOscillator(),e=ac.createGain(),l=ac.createBiquadFilter();
+      o.type='triangle';o.frequency.value=f;o.detune.value=d;l.type='lowpass';l.frequency.value=700;
+      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.12,t+.6);e.gain.linearRampToValueAtTime(0,t+dur);
+      o.connect(l);l.connect(e);e.connect(music);o.start(t);o.stop(t+dur+.1);});
+  }
+  function schedule(){
+    while(nextT<ac.currentTime+.3){
+      const bar=Math.floor(step/8)%PROG.length,i=step%8,[b,arp]=PROG[bar];
+      if(i===0){pad(nextT,N(b+12),BEAT*8);bell(nextT,N(b),.5,1.6,music);}
+      bell(nextT,N(arp[i]),i%2?.22:.32,1.1,music);
+      nextT+=BEAT;step++;
+    }
+  }
+  function startMusic(){if(timer||!ac)return;nextT=ac.currentTime+.08;timer=setInterval(schedule,90);schedule();}
+  function setMuted(m){muted=m;try{localStorage.setItem('sakoia-muted',m?'1':'0');}catch(_){}
+    if(ac)master.gain.setTargetAtTime(m?0:1,ac.currentTime,.05);
+    const b=document.getElementById('sndBtn');b.setAttribute('aria-pressed',m?'true':'false');b.setAttribute('aria-label',m?'הפעלת מוזיקה':'השתקת מוזיקה');}
+  setTimeout(()=>setMuted(muted),0);
+  const PENTA=[72,74,76,79,81,84];
+  return {
+    start(){if(!init())return;ac.resume();startMusic();},
+    toggle(){setMuted(!muted);if(!muted)this.start();},
+    thread(n){if(!ac)return;const t=ac.currentTime;const r=PENTA[Math.min(n,5)];
+      bell(t,N(r),.6,1.4,sfx);bell(t+.09,N(r+7),.45,1.4,sfx);bell(t+.18,N(r+12),.35,1.8,sfx);},
+    miss(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),e=ac.createGain();o.type='sine';
+      o.frequency.setValueAtTime(330,t);o.frequency.exponentialRampToValueAtTime(150,t+.35);
+      e.gain.setValueAtTime(.25,t);e.gain.exponentialRampToValueAtTime(.001,t+.4);o.connect(e);e.connect(sfx);o.start(t);o.stop(t+.45);},
+    lose(){if(!ac)return;const t=ac.currentTime;[69,65,62].forEach((m,i)=>bell(t+i*.18,N(m),.35,1.2,sfx));},
+    win(n){if(!ac)return;const t=ac.currentTime+.05;
+      [65,69,72,77,81,84].forEach((m,i)=>bell(t+i*.11,N(m),.5,1.6,sfx));
+      [77,81,84].forEach(m=>bell(t+.75,N(m),.42,2.6,sfx));
+      for(let i=0;i<6+n*3;i++)bell(t+.9+i*.07+Math.random()*.04,N(88+[0,2,4,7,9,12][i%6]),.12,.5,sfx);}
+  };
+})();
+$('sndBtn').addEventListener('click',()=>SFX.toggle());
+
+/* ---------- confetti ---------- */
+const fx=$('fx'),fctx=fx.getContext('2d');let bits=[],fxRaf=0;
+function confetti(n){
+  const dpr=Math.min(window.devicePixelRatio||1,2);fx.width=innerWidth*dpr;fx.height=innerHeight*dpr;fctx.setTransform(dpr,0,0,dpr,0,0);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cols=['#6b3f44','#c98f8b','#ffffff','#e8c27a','#f6dad7','#b48b3c','#ecb9b6'];
+  const count=Math.round((reduce?25:60)+n*(reduce?8:30));
+  for(let i=0;i<count;i++){
+    const side=i%3; // left cannon, right cannon, top rain
+    const x=side===0?-10:side===1?innerWidth+10:Math.random()*innerWidth, y=side===2?-20-Math.random()*innerHeight*.4:innerHeight*.62;
+    const a=side===0?(-Math.PI/2.6-Math.random()*.6):side===1?(-Math.PI+Math.PI/2.6+Math.random()*.6):Math.PI/2;
+    const v=side===2?60+Math.random()*80:520+Math.random()*420;
+    bits.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*6.28,vr:(Math.random()-.5)*12,w:5+Math.random()*6,h:8+Math.random()*8,
+      c:cols[i%cols.length],shape:i%5===0?'d':'r',wob:Math.random()*6.28,life:0});
+  }
+  if(!fxRaf){let last=performance.now();const loop=now=>{const dt=Math.min(.033,(now-last)/1000);last=now;
+    fctx.clearRect(0,0,innerWidth,innerHeight);
+    bits.forEach(b=>{b.life+=dt;b.vy+=520*dt;b.vx*=1-1.6*dt;b.vy*=1-.9*dt;b.x+=b.vx*dt+Math.sin(b.wob+=dt*6)*0.6;b.y+=b.vy*dt;b.r+=b.vr*dt;
+      fctx.save();fctx.translate(b.x,b.y);fctx.rotate(b.r);fctx.globalAlpha=Math.max(0,Math.min(1,4.5-b.life));fctx.fillStyle=b.c;
+      if(b.c==='#ffffff'){fctx.shadowColor='rgba(107,63,68,.35)';fctx.shadowBlur=2;}
+      if(b.shape==='d'){fctx.beginPath();fctx.moveTo(0,-b.h/2);fctx.lineTo(b.w/2,0);fctx.lineTo(0,b.h/2);fctx.lineTo(-b.w/2,0);fctx.fill();}
+      else fctx.fillRect(-b.w/2,-b.h/2*Math.abs(Math.cos(b.wob)),b.w,b.h*Math.abs(Math.cos(b.wob))+1);
+      fctx.restore();});
+    bits=bits.filter(b=>b.y<innerHeight+40&&b.life<4.6);
+    if(bits.length)fxRaf=requestAnimationFrame(loop);else{fxRaf=0;fctx.clearRect(0,0,innerWidth,innerHeight);}};
+    fxRaf=requestAnimationFrame(loop);}
+}
+function stopConfetti(){bits=[];}
+
+/* ---------- copy & share ---------- */
+let lastCoupon=null;
+const GAME_URL=location.href.split('#')[0];
+$('copyBtn').addEventListener('click',()=>{
+  if(!lastCoupon)return;const lab=$('copyBtn').lastChild;
+  const done=()=>{lab.textContent='הקוד הועתק';setTimeout(()=>lab.textContent='העתקת הקוד',2200);};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents($('cpCode'));const s=getSelection();s.removeAllRanges();s.addRange(r);
+    try{document.execCommand('copy')?done():lab.textContent='סמנו את הקוד והעתיקו';}catch(_){lab.textContent='סמנו את הקוד והעתיקו';}};
+  try{navigator.clipboard.writeText(lastCoupon.code).then(done,fallback);}catch(_){fallback();}
+});
+async function couponImage(cp){
+  try{await document.fonts.ready;}catch(_){}
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#fbefec');bg.addColorStop(.45,'#f6dad7');bg.addColorStop(1,'#ecb9b6');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  g.strokeStyle='rgba(107,63,68,.35)';g.lineWidth=3;g.strokeRect(36,36,W-72,H-72);g.lineWidth=1.5;g.strokeRect(50,50,W-100,H-100);
+  const hand=IMG.hand;if(hand.complete&&hand.naturalWidth){const hh=520,hw=hh*ASSETS.hand.w/ASSETS.hand.h*2.2;g.save();g.globalAlpha=.95;
+    g.drawImage(hand,0,0,ASSETS.hand.w,ASSETS.hand.h*0.45,W/2-hw/2+40,240,hw,hh*0.86);g.restore();
+    const fade=g.createLinearGradient(0,560,0,700);fade.addColorStop(0,'rgba(246,218,215,0)');fade.addColorStop(1,'#f3d0cd');g.fillStyle=fade;g.fillRect(52,560,W-104,160);}
+  g.textAlign='center';g.fillStyle='#6b3f44';
+  g.font='400 92px "Frank Ruhl Libre", Georgia, serif';
+  const word='SAKOIA';let x=W/2-(word.length-1)*0.5*112;g.direction='ltr';for(const ch of word){g.fillText(ch,x,175);x+=112;}
+  g.font='500 26px Heebo, Arial';g.fillStyle='#8a5a5e';g.fillText('J E W E L R Y',W/2,222);
+  g.direction='rtl';
+  // coupon card
+  const cy=790;g.fillStyle='#fff';g.shadowColor='rgba(107,63,68,.2)';g.shadowBlur=40;g.fillRect(130,cy,W-260,400);g.shadowBlur=0;
+  g.strokeStyle='#6b3f44';g.lineWidth=3;g.strokeRect(130,cy,W-260,400);g.setLineDash([10,8]);g.strokeStyle='rgba(201,143,139,.8)';g.lineWidth=2;g.strokeRect(146,cy+16,W-292,368);g.setLineDash([]);
+  g.fillStyle='#6b3f44';g.font='700 46px Heebo, Arial';g.fillText('זכיתי בקופון',W/2,cy-34);
+  g.font='300 170px Heebo, Arial';g.fillText('₪'+cp.amount,W/2,cy+175);
+  g.font='400 36px Heebo, Arial';g.fillStyle='#4a2a2e';g.fillText('הנחה בקנייה מעל ₪200',W/2,cy+235);
+  g.font='700 54px ui-monospace, Menlo, monospace';g.direction='ltr';g.fillStyle='#6b3f44';g.fillText(cp.code,W/2,cy+310);g.direction='rtl';
+  g.font='500 30px Heebo, Arial';g.fillStyle='#4a2a2e';g.fillText('בתוקף עד 30.11.2026 · סניף אילת בלבד',W/2,cy+362);
+  g.font='400 27px Heebo, Arial';g.fillStyle='#6b3f44';
+  g.fillText('דוכן סקויה · קניון מול הים, אילת',W/2,H-118);
+  g.font='400 22px Heebo, Arial';g.fillStyle='#8a5a5e';g.fillText('ללא כפל מבצעים · קופון אחד לקנייה · לא כולל ניקובי חורים ועגילי פירסינג · בכפוף לתקנון',W/2,H-76);
+  return new Promise(r=>c.toBlob(r,'image/png'));
+}
+$('shareBtn').addEventListener('click',async()=>{
+  if(!lastCoupon)return;const btn=$('shareBtn'),lab=btn.lastChild;btn.disabled=true;
+  const text='זכיתי בקופון של ₪'+lastCoupon.amount+' בדוכן סקויה באילת! 💍\nקוד: '+lastCoupon.code+'\nבתוקף עד 30.11.2026, בקנייה מעל ₪200.\nגם אתם יכולים לשחק: '+GAME_URL;
+  try{
+    const blob=await couponImage(lastCoupon);
+    const file=blob&&new File([blob],'sakoia-coupon-'+lastCoupon.code+'.png',{type:'image/png'});
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],text});
+    } else {
+      window.location.href='https://wa.me/?text='+encodeURIComponent(text);
+    }
+  }catch(e){
+    if(e&&e.name!=='AbortError')window.location.href='https://wa.me/?text='+encodeURIComponent(text);
+  }finally{btn.disabled=false;lab.textContent='שיתוף בוואטסאפ';}
+});
 
 /* ---------- views ---------- */
 function show(view){
@@ -616,12 +784,13 @@ function renderLanding(){
 }
 function startGame(){
   if(campaignOver()){renderLanding();return;}
+  SFX.start();stopConfetti();
   history.replaceState(null,'','#play');
   ['landing','terms','staff'].forEach(v=>$(v).hidden=true);$('endOv').hidden=true;reset();
 }
 $('startBtn').addEventListener('click',startGame);
 $('againBtn').addEventListener('click',startGame);
-$('homeBtn').addEventListener('click',()=>{state='menu';location.hash='';show('landing');});
+$('homeBtn').addEventListener('click',()=>{stopConfetti();state='menu';location.hash='';show('landing');});
 $('termsLink').addEventListener('click',()=>{location.hash='terms';});
 $('termsBack').addEventListener('click',()=>{location.hash='';});
 window.addEventListener('hashchange',route);

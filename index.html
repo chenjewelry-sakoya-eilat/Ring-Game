@@ -78,8 +78,18 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-block:calc(env(safe-area-inset-top,0px) + 20px) calc(env(safe-area-inset-bottom,0px) + 28px)}
 .wrap{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(10px,2.2dvh,18px)}
-.ctabar{position:sticky;bottom:0;display:grid;gap:6px;padding-top:10px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);background:linear-gradient(180deg,rgba(236,185,182,0),var(--bg) 30%);z-index:2}
-#landing{padding-bottom:0}
+.ctabar{display:grid;gap:6px}
+#landing{padding-block:calc(env(safe-area-inset-top,0px) + clamp(10px,2.5dvh,22px)) calc(env(safe-area-inset-bottom,0px) + clamp(10px,2.5dvh,22px))}
+#landing .wrap{height:100%;min-height:440px;gap:clamp(6px,1.6dvh,16px)}
+#landing .wordmark{font-size:clamp(22px,min(8vw,4.6dvh),36px)}
+#landing .wordmark small{margin-top:min(8px,1dvh)}
+#landing .hero{flex:1 1 0;min-height:70px;height:auto}
+#landing h1{font-size:clamp(22px,min(8.4vw,4.8dvh),38px)}
+#landing .lead{font-size:clamp(13px,min(3.9vw,2.2dvh),15px);line-height:1.4}
+#landing .ladder div{padding-block:clamp(5px,1.1dvh,10px) clamp(4px,.9dvh,8px)}
+#landing .ladder b{font-size:clamp(16px,min(5.4vw,3dvh),22px)}
+#landing .fine{font-size:11px;line-height:1.45}
+#landing .btn{padding-block:clamp(11px,1.9dvh,15px)}
 .wordmark{text-align:center;font-family:var(--font-mark);font-weight:400;letter-spacing:.42em;font-size:clamp(28px,9vw,38px);line-height:1;direction:ltr;padding-inline-start:.42em}
 .wordmark small{display:block;font-size:11px;letter-spacing:.6em;margin-top:8px;color:var(--muted)}
 .where{text-align:center;font-size:13px;letter-spacing:.04em;color:var(--muted)}
@@ -96,8 +106,11 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
 .page .btn{background:var(--berry);color:#fff8f6}
 .fine{font-size:12px;color:var(--muted);line-height:1.6;text-align:center;margin:0}
 .link{appearance:none;background:none;border:0;color:var(--berry);text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer;padding:4px}
-.mine{border:1px dashed var(--berry);background:rgba(255,255,255,.5);padding:12px;text-align:center;display:grid;gap:4px}
-.mine code{font:600 18px ui-monospace,Menlo,monospace;letter-spacing:.12em;direction:ltr}
+.mine{border:1px dashed var(--berry);background:rgba(255,255,255,.6);padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mine .lbl{font-size:12px;color:var(--muted);line-height:1.2}
+.mine .lbl b{display:block;font-size:15px;color:var(--berry);font-weight:700}
+.mine code{font:600 16px ui-monospace,Menlo,monospace;letter-spacing:.08em;direction:ltr;color:var(--berry)}
+.mine .mini{padding:7px 12px;font-size:13px}
 .closed{border:1px solid var(--line);padding:14px;text-align:center}
 .terms{background:var(--shell);color:var(--ink)}
 .terms .wrap{gap:12px}
@@ -164,11 +177,11 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
       <div><b>₪40</b><span>5 טבעות</span></div>
     </div>
     <div class="mine" id="mine" hidden></div>
-    <p class="fine">למימוש בקנייה מעל ₪200 בדוכן סקויה בסניף אילת · בתוקף עד 30.11.2026 · קופון אחד לקנייה · ללא כפל מבצעים · <button class="link" id="termsLink">לתקנון המלא</button></p>
     <div class="ctabar">
       <div class="closed" id="closed" hidden>המבצע הסתיים. תודה שהשתתפתם!</div>
       <button class="btn" id="startBtn">לשחק עכשיו</button>
     </div>
+    <p class="fine">בקנייה מעל ₪200 בדוכן סקויה אילת · עד 30.11.2026 · קופון אחד לקנייה · ללא כפל מבצעים · <button class="link" id="termsLink">תקנון</button></p>
   </div>
 </div>
 
@@ -262,7 +275,7 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
 /* Campaign settings. Fill supabaseUrl + supabaseKey (anon key) to issue real, trackable coupons. */
 const CFG={
   brand:'SAKOIA',
-supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
+ supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
 supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
   expires:new Date('2026-11-30T23:59:59+02:00'),
   prizes:[0,5,10,20,30,40]
@@ -623,64 +636,68 @@ async function showEnd(){
 
 /* ---------- sound: synthesized in the browser, no audio files ---------- */
 const SFX=(function(){
-  let ac=null,master,music,sfx,delay,timer=null,nextT=0,step=0;
+  let ac=null,master,music,sfx,noise,timer=null,nextT=0,step=0;
   let muted=false;try{muted=localStorage.getItem('sakoia-muted')==='1';}catch(_){}
   const N=m=>440*Math.pow(2,(m-69)/12);
-  // F major, gentle I–vi–IV–V. Each chord: [bass, arpeggio notes]
-  const PROG=[[41,[65,69,72,77,72,69,72,76]],[38,[62,65,69,74,69,65,69,72]],[46,[62,65,70,74,70,65,70,72]],[48,[64,67,72,76,72,67,72,74]]];
-  const BEAT=60/84/2; // eighth notes at 84 bpm
+  const S16=60/124/4; // sixteenth notes at 124 bpm
+  // C – G – Am – F, one bar each. Melody steps: {step: midi}
+  const CH=[{root:48,chord:[60,64,67],mel:{0:76,2:79,4:84,7:79,10:76,12:79,14:81}},
+            {root:43,chord:[59,62,67],mel:{0:79,2:83,4:86,7:83,10:79,12:83,14:81}},
+            {root:45,chord:[60,64,69],mel:{0:81,2:84,4:88,7:84,10:81,12:84,14:86}},
+            {root:41,chord:[60,65,69],mel:{0:84,2:81,4:77,6:81,8:84,10:86,12:88,14:86}}];
+  const BASS=[0,3,6,8,10,11,14]; // bouncy bass pattern
   function init(){
     if(ac)return true;
     const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
-    ac=new C();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination);
-    music=ac.createGain();music.gain.value=.16;sfx=ac.createGain();sfx.gain.value=.5;
-    delay=ac.createDelay();delay.delayTime.value=BEAT*3;const fb=ac.createGain();fb.gain.value=.28;const wet=ac.createGain();wet.gain.value=.35;
-    const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;
-    delay.connect(fb);fb.connect(lp);lp.connect(delay);delay.connect(wet);wet.connect(master);
-    music.connect(master);music.connect(delay);sfx.connect(master);sfx.connect(delay);
+    ac=new C();master=ac.createGain();master.gain.value=muted?0:1;
+    const comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=3;master.connect(comp);comp.connect(ac.destination);
+    music=ac.createGain();music.gain.value=.22;music.connect(master);
+    sfx=ac.createGain();sfx.gain.value=.55;sfx.connect(master);
+    const len=ac.sampleRate*.5;noise=ac.createBuffer(1,len,ac.sampleRate);const d=noise.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
     document.addEventListener('visibilitychange',()=>{if(!ac)return;document.hidden?ac.suspend():ac.resume();});
     return true;
   }
-  function bell(t,f,vol,dur,dest){ // music-box tone: sine + soft overtone
-    [[1,1],[2.01,.28],[3.98,.08]].forEach(([m,g])=>{
-      const o=ac.createOscillator(),e=ac.createGain();o.type='sine';o.frequency.value=f*m;
-      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(vol*g,t+.006);e.gain.exponentialRampToValueAtTime(.0001,t+dur/m);
-      o.connect(e);e.connect(dest);o.start(t);o.stop(t+dur+.05);
-    });
+  function env(g,t,a,peak,dec){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+dec);}
+  function tone(t,f,type,peak,dec,dest,cut){
+    const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;
+    let node=o;if(cut){const l=ac.createBiquadFilter();l.type='lowpass';l.frequency.value=cut;o.connect(l);node=l;}
+    env(g,t,.004,peak,dec);node.connect(g);g.connect(dest);o.start(t);o.stop(t+dec+.05);
   }
-  function pad(t,f,dur){
-    [-6,6].forEach(d=>{const o=ac.createOscillator(),e=ac.createGain(),l=ac.createBiquadFilter();
-      o.type='triangle';o.frequency.value=f;o.detune.value=d;l.type='lowpass';l.frequency.value=700;
-      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.12,t+.6);e.gain.linearRampToValueAtTime(0,t+dur);
-      o.connect(l);l.connect(e);e.connect(music);o.start(t);o.stop(t+dur+.1);});
-  }
+  function kick(t){const o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);
+    env(g,t,.002,.9,.22);o.connect(g);g.connect(music);o.start(t);o.stop(t+.3);}
+  function hiss(t,peak,dec,hp,dest){const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=noise;
+    f.type='highpass';f.frequency.value=hp;env(g,t,.001,peak,dec);s.connect(f);f.connect(g);g.connect(dest);s.start(t);s.stop(t+dec+.05);}
+  function clap(t){hiss(t,.45,.12,1200,music);hiss(t+.012,.3,.1,1500,music);tone(t,190,'triangle',.18,.07,music);}
   function schedule(){
-    while(nextT<ac.currentTime+.3){
-      const bar=Math.floor(step/8)%PROG.length,i=step%8,[b,arp]=PROG[bar];
-      if(i===0){pad(nextT,N(b+12),BEAT*8);bell(nextT,N(b),.5,1.6,music);}
-      bell(nextT,N(arp[i]),i%2?.22:.32,1.1,music);
-      nextT+=BEAT;step++;
+    while(nextT<ac.currentTime+.25){
+      const i=step%16,bar=CH[Math.floor(step/16)%4],t=nextT;
+      if(i%4===0)kick(t);
+      if(i===4||i===12)clap(t);
+      if(i%2===0)hiss(t,i%4===2?.22:.1,.04,7000,music); else if(Math.random()<.35)hiss(t,.06,.03,8000,music);
+      if(BASS.includes(i)){const oct=(i===6||i===14)?12:0;tone(t,N(bar.root+oct),'square',.22,.16,music,600);}
+      if(i===2||i===6||i===10||i===14)bar.chord.forEach(m=>tone(t,N(m),'triangle',.09,.12,music,2400));
+      if(bar.mel[i]!=null)tone(t,N(bar.mel[i]),'square',.13,.2,music,3200);
+      nextT+=S16;step++;
     }
   }
-  function startMusic(){if(timer||!ac)return;nextT=ac.currentTime+.08;timer=setInterval(schedule,90);schedule();}
+  function startMusic(){if(timer||!ac)return;nextT=ac.currentTime+.08;step=0;timer=setInterval(schedule,60);schedule();}
   function setMuted(m){muted=m;try{localStorage.setItem('sakoia-muted',m?'1':'0');}catch(_){}
     if(ac)master.gain.setTargetAtTime(m?0:1,ac.currentTime,.05);
     const b=document.getElementById('sndBtn');b.setAttribute('aria-pressed',m?'true':'false');b.setAttribute('aria-label',m?'הפעלת מוזיקה':'השתקת מוזיקה');}
   setTimeout(()=>setMuted(muted),0);
-  const PENTA=[72,74,76,79,81,84];
+  const UP=[76,79,81,84,88,91];
+  function ding(t,f,peak){tone(t,f,'sine',peak,.45,sfx);tone(t,f*2,'sine',peak*.25,.25,sfx);}
   return {
     start(){if(!init())return;ac.resume();startMusic();},
     toggle(){setMuted(!muted);if(!muted)this.start();},
-    thread(n){if(!ac)return;const t=ac.currentTime;const r=PENTA[Math.min(n,5)];
-      bell(t,N(r),.6,1.4,sfx);bell(t+.09,N(r+7),.45,1.4,sfx);bell(t+.18,N(r+12),.35,1.8,sfx);},
-    miss(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),e=ac.createGain();o.type='sine';
-      o.frequency.setValueAtTime(330,t);o.frequency.exponentialRampToValueAtTime(150,t+.35);
-      e.gain.setValueAtTime(.25,t);e.gain.exponentialRampToValueAtTime(.001,t+.4);o.connect(e);e.connect(sfx);o.start(t);o.stop(t+.45);},
-    lose(){if(!ac)return;const t=ac.currentTime;[69,65,62].forEach((m,i)=>bell(t+i*.18,N(m),.35,1.2,sfx));},
+    thread(n){if(!ac)return;const t=ac.currentTime,r=UP[Math.min(n,5)];ding(t,N(r),.55);ding(t+.07,N(r+12),.35);},
+    miss(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';
+      o.frequency.setValueAtTime(330,t);o.frequency.exponentialRampToValueAtTime(150,t+.3);env(g,t,.005,.28,.32);o.connect(g);g.connect(sfx);o.start(t);o.stop(t+.4);},
+    lose(){if(!ac)return;const t=ac.currentTime;[67,64,60].forEach((m,i)=>ding(t+i*.16,N(m),.35));},
     win(n){if(!ac)return;const t=ac.currentTime+.05;
-      [65,69,72,77,81,84].forEach((m,i)=>bell(t+i*.11,N(m),.5,1.6,sfx));
-      [77,81,84].forEach(m=>bell(t+.75,N(m),.42,2.6,sfx));
-      for(let i=0;i<6+n*3;i++)bell(t+.9+i*.07+Math.random()*.04,N(88+[0,2,4,7,9,12][i%6]),.12,.5,sfx);}
+      [72,76,79,84].forEach((m,i)=>{tone(t+i*.1,N(m),'square',.16,.22,sfx,3500);ding(t+i*.1,N(m),.3);});
+      [72,76,79,84].forEach(m=>tone(t+.45,N(m),'triangle',.16,.9,sfx,4000));ding(t+.45,N(88),.45);
+      for(let i=0;i<5+n*2;i++)ding(t+.6+i*.06,N([91,93,96,98,100][i%5]),.1);}
   };
 })();
 $('sndBtn').addEventListener('click',()=>SFX.toggle());
@@ -717,12 +734,14 @@ function stopConfetti(){bits=[];}
 /* ---------- copy & share ---------- */
 let lastCoupon=null;
 const GAME_URL=location.href.split('#')[0];
+function copyText(text,el,cb){
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);
+    let ok=false;try{ok=document.execCommand('copy');}catch(_){}cb(ok);};
+  try{navigator.clipboard.writeText(text).then(()=>cb(true),fallback);}catch(_){fallback();}
+}
 $('copyBtn').addEventListener('click',()=>{
   if(!lastCoupon)return;const lab=$('copyBtn').lastChild;
-  const done=()=>{lab.textContent='הקוד הועתק';setTimeout(()=>lab.textContent='העתקת הקוד',2200);};
-  const fallback=()=>{const r=document.createRange();r.selectNodeContents($('cpCode'));const s=getSelection();s.removeAllRanges();s.addRange(r);
-    try{document.execCommand('copy')?done():lab.textContent='סמנו את הקוד והעתיקו';}catch(_){lab.textContent='סמנו את הקוד והעתיקו';}};
-  try{navigator.clipboard.writeText(lastCoupon.code).then(done,fallback);}catch(_){fallback();}
+  copyText(lastCoupon.code,$('cpCode'),ok=>{lab.textContent=ok?'הקוד הועתק':'סמנו את הקוד והעתיקו';setTimeout(()=>lab.textContent='העתקת הקוד',2200);});
 });
 async function couponImage(cp){
   try{await document.fonts.ready;}catch(_){}
@@ -778,7 +797,12 @@ function route(){
 }
 function renderLanding(){
   const m=readMine()[0], box=$('mine');
-  if(m){box.hidden=false;box.innerHTML='';const a=document.createElement('div');a.textContent='הקופון האחרון שלך: ₪'+m.amount;const b=document.createElement('code');b.textContent=m.code;box.append(a,b);}
+  if(m){box.hidden=false;box.innerHTML='';
+    const a=document.createElement('div');a.className='lbl';a.textContent='הקופון האחרון שלך';const amt=document.createElement('b');amt.textContent='₪'+m.amount+' הנחה';a.append(amt);
+    const b=document.createElement('code');b.textContent=m.code;
+    const c=document.createElement('button');c.className='mini';c.type='button';c.textContent='העתקה';
+    c.addEventListener('click',()=>copyText(m.code,b,ok=>{c.textContent=ok?'הועתק':'סמנו והעתיקו';setTimeout(()=>c.textContent='העתקה',2200);}));
+    box.append(a,b,c);}
   else box.hidden=true;
   const over=campaignOver();$('closed').hidden=!over;$('startBtn').hidden=over;
 }

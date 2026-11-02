@@ -686,13 +686,20 @@ const SFX=(function(){
     const b=document.getElementById('sndBtn');b.setAttribute('aria-pressed',m?'true':'false');b.setAttribute('aria-label',m?'הפעלת מוזיקה':'השתקת מוזיקה');}
   setTimeout(()=>setMuted(muted),0);
   const UP=[76,79,81,84,88,91];
+  function metal(t,f,peak,dec){ // inharmonic partials = small metal object
+    [[1,1],[2.76,.55],[5.4,.3],[8.93,.16]].forEach(([m,g])=>tone(t,f*m,'sine',peak*g,(dec||.32)/Math.sqrt(m),sfx));
+    hiss(t,peak*.35,.012,5000,sfx);
+  }
   function ding(t,f,peak){tone(t,f,'sine',peak,.45,sfx);tone(t,f*2,'sine',peak*.25,.25,sfx);}
   return {
     start(){if(!init())return;ac.resume();startMusic();},
     toggle(){setMuted(!muted);if(!muted)this.start();},
     thread(n){if(!ac)return;const t=ac.currentTime,r=UP[Math.min(n,5)];ding(t,N(r),.55);ding(t+.07,N(r+12),.35);},
-    miss(){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';
-      o.frequency.setValueAtTime(330,t);o.frequency.exponentialRampToValueAtTime(150,t+.3);env(g,t,.005,.28,.32);o.connect(g);g.connect(sfx);o.start(t);o.stop(t+.4);},
+    miss(){if(!ac)return; // a ring dropping on a hard surface: bounces get faster and softer, then a short spin-down rattle
+      const t0=ac.currentTime+.22,base=2300+Math.random()*500;
+      let t=t0,dt=.21,peak=.5;
+      for(let i=0;i<6;i++){metal(t,base*(1+(Math.random()-.5)*.06),peak);t+=dt;dt*=.62;peak*=.6;}
+      for(let i=0;i<12;i++){const k=i/11;metal(t+.28*(1-Math.pow(1-k,2)),base*1.02,.06*(1-k)+.015,.06);}},
     lose(){if(!ac)return;const t=ac.currentTime;[67,64,60].forEach((m,i)=>ding(t+i*.16,N(m),.35));},
     win(n){if(!ac)return;const t=ac.currentTime+.05;
       [72,76,79,84].forEach((m,i)=>{tone(t+i*.1,N(m),'square',.16,.22,sfx,3500);ding(t+i*.1,N(m),.3);});

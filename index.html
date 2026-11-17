@@ -111,7 +111,10 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
 .mine .lbl b{display:block;font-size:15px;color:var(--berry);font-weight:700}
 .mine code{font:600 16px ui-monospace,Menlo,monospace;letter-spacing:.08em;direction:ltr;color:var(--berry)}
 .mine .mini{padding:7px 12px;font-size:13px}
-.closed{border:1px solid var(--line);padding:14px;text-align:center}
+.closed{border:1px solid var(--berry);background:#fff;padding:clamp(16px,3dvh,26px) 14px;text-align:center;display:grid;gap:6px}
+.closed b{font-size:clamp(22px,6.4vw,28px);font-weight:700;color:var(--berry)}
+.closed span{font-size:16px;color:var(--ink)}
+#landing.over .ladder,#landing.over .fine,#landing.over .mine,#landing.over h1,#landing.over .lead{display:none!important}
 .terms{background:var(--shell);color:var(--ink)}
 .terms .wrap{gap:12px}
 .terms h1{color:var(--berry);font-size:clamp(26px,8vw,32px)}
@@ -178,7 +181,7 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,8.6vw,38
     </div>
     <div class="mine" id="mine" hidden></div>
     <div class="ctabar">
-      <div class="closed" id="closed" hidden>המבצע הסתיים. תודה שהשתתפתם!</div>
+      <div class="closed" id="closed" hidden><b>המבצע הסתיים</b><span>נתראה במבצע הבא!</span></div>
       <button class="btn" id="startBtn">לשחק עכשיו</button>
     </div>
     <p class="fine">בקנייה מעל ₪200 בדוכן סקויה אילת · עד 30.11.2026 · קופון אחד לקנייה · ללא כפל מבצעים · <button class="link" id="termsLink">תקנון</button></p>
@@ -277,7 +280,7 @@ const CFG={
   brand:'SAKOIA',
  supabaseUrl:'https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/',
 supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48',
-  expires:new Date('2026-11-30T23:59:59+02:00'),
+  expires:new Date('2026-12-01T00:00:00+02:00'), // the campaign ends at midnight, 1.12.2026
   prizes:[0,5,10,20,30,40]
 };
 const LIVE=!!(CFG.supabaseUrl&&CFG.supabaseKey);
@@ -610,9 +613,10 @@ async function issueCoupon(rings){
 }
 function saveMine(c){try{const a=JSON.parse(localStorage.getItem('sakoia-coupons')||'[]');a.unshift({code:c.code,amount:c.amount,demo:c.demo});localStorage.setItem('sakoia-coupons',JSON.stringify(a.slice(0,10)));}catch(_){}}
 function readMine(){try{return JSON.parse(localStorage.getItem('sakoia-coupons')||'[]');}catch(_){return [];}}
-function campaignOver(){return Date.now()>CFG.expires.getTime();}
+function campaignOver(){return Date.now()>=CFG.expires.getTime();}
 
 async function showEnd(){
+  if(campaignOver()){state='menu';history.replaceState(null,'','#');show('landing');return;}
   const c=$('caught');c.innerHTML='';
   RINGS.forEach((r,i)=>{const e=document.createElement('img');e.src=ASSETS[r.key].src;e.alt=r.name;if(!results[i])e.className='miss';c.appendChild(e);});
   const won=CFG.prizes[hits];
@@ -811,8 +815,10 @@ function renderLanding(){
     c.addEventListener('click',()=>copyText(m.code,b,ok=>{c.textContent=ok?'הועתק':'סמנו והעתיקו';setTimeout(()=>c.textContent='העתקה',2200);}));
     box.append(a,b,c);}
   else box.hidden=true;
-  const over=campaignOver();$('closed').hidden=!over;$('startBtn').hidden=over;
+  const over=campaignOver();$('closed').hidden=!over;$('startBtn').hidden=over;$('landing').classList.toggle('over',over);
 }
+/* flip to the closed screen at midnight even if the page stays open */
+setInterval(()=>{if(campaignOver()&&!$('landing').hidden)renderLanding();},20000);
 function startGame(){
   if(campaignOver()){renderLanding();return;}
   SFX.start();stopConfetti();

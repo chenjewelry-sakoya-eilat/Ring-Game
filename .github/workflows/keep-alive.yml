@@ -1,0 +1,14 @@
+name: Supabase keep-alive
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        run: |
+          curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://nymsfbgfbatcmvwrhaid.supabase.co/rest/v1/coupons?select=code&limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55bXNmYmdmYmF0Y212d3JoYWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NjUwNjYsImV4cCI6MjEwOTE0MTA2Nn0.cBQ1V44lStp2nvrLwvqzrb22s5EltazaUL2N2nEwg48"
